@@ -2,27 +2,30 @@
 
 describe("template spec", () => {
   const URL_BASE_BACKEND = "http://localhost:9000";
+  const miTarea = {
+    descripcion: "Algo3: Preparar la clase de E2E Testing",
+    iteracion: "Cursada 2023",
+    asignatario: "Juan Contardo",
+  };
 
-  beforeEach(() => {
+  before(() => {
     cy.request("PUT", URL_BASE_BACKEND + "/reset/tareas");
-    cy.visit("http://localhost:4200/");
   });
 
-  it("crea una tarea", () => {
-    const miTarea = {
-      descripcion: "Algo3: Preparar la clase de E2E Testing",
-      iteracion: "Cursada 2023",
-      asignatario: "Juan Contardo",
-    };
+  beforeEach(() => {
+    cy.visit("http://localhost:4200/");
 
     cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/usuarios" }).as(
       "getUsuarios"
     );
 
-    cy.intercept({ method: "GET", url: "http://localhost:9000/tareas" }).as(
+    cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/tareas" }).as(
       "getTareas"
     );
 
+  });
+
+  it("crea una tarea", () => {
     cy.get("[data-testid='nueva-tarea']").click();
 
     cy.wait("@getUsuarios");
@@ -52,7 +55,7 @@ describe("template spec", () => {
     cy.get("@tareaCreada")
       .findIteracion()
       .should("contains.text", miTarea.iteracion);
-      
+
     cy.get("@tareaCreada")
       .findAsignatario()
       .should("contains.text", miTarea.asignatario);
