@@ -23,6 +23,9 @@ describe("template spec", () => {
       "getTareas"
     );
 
+    cy.intercept({ method: "PUT", url: URL_BASE_BACKEND + "/tareas/*" }).as(
+      "updateTarea"
+    );
   });
 
   it("crea una tarea", () => {
@@ -63,5 +66,59 @@ describe("template spec", () => {
     cy.get("@tareaCreada").findCumplirButton().should("exist");
     cy.get("@tareaCreada").findAsignarButton().should("exist");
     cy.get("@tareaCreada").findDesasignarButton().should("exist");
+  });
+
+  it("desasigna la tarea sin inconvenientes", () => {
+    cy.get('[data-testid="fila-tarea"]')
+      .filter(`:contains(${miTarea.descripcion})`)
+      .as("tareaCreada");
+
+    cy.get("@tareaCreada")
+      .findAsignatario()
+      .should("contains.text", miTarea.asignatario);
+
+    cy.get("@tareaCreada").findDesasignarButton().click();
+
+    cy.get("@tareaCreada").findAsignatario().should("be.empty");
+
+    cy.get("@tareaCreada").findDesasignarButton().should("not.exist");
+  });
+
+  it("asigna a alguien nuevo", () => {
+
+    const nuevoAsignatario = "Jorge Luis Lescano"
+
+    cy.get('[data-testid="fila-tarea"]')
+      .filter(`:contains(${miTarea.descripcion})`)
+      .as("tareaCreada");
+
+    cy.get("@tareaCreada").findAsignarButton().click();
+
+    cy.wait("@getUsuarios");
+
+    cy.findByTestId("asignatario").select(nuevoAsignatario);
+
+    cy.contains("Guardar").click();
+
+    cy.wait("@getTareas");
+
+    cy.get("@tareaCreada").findAsignatario().should("contains.text", nuevoAsignatario);
+
+    cy.get("@tareaCreada").findDesasignarButton().should("exist");
+  });
+
+  it("completar la tarea, no poder reasignarla o volverla a completar", () => {
+
+    cy.get('[data-testid="fila-tarea"]')
+      .filter(`:contains(${miTarea.descripcion})`)
+      .as("tareaCreada");
+
+    cy.get("@tareaCreada").findCumplirButton().click();
+
+    cy.wait("@updateTarea");
+
+    cy.get("@tareaCreada").findDesasignarButton().should("not.exist");
+    cy.get("@tareaCreada").findAsignarButton().should("not.exist");
+    cy.get("@tareaCreada").findDesasignarButton().should("not.exist");
   });
 });
