@@ -19,7 +19,7 @@ describe("template spec", () => {
   });
 
   beforeEach(() => {
-    cy.visit("http://localhost:4200/");
+    cy.visit("/");
   });
 
   it("crea una tarea", () => {

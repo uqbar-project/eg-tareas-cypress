@@ -11,7 +11,7 @@ describe("Lista de Tareas - Test Suite", () => {
   });
 
   beforeEach(() => {
-    cy.visit("http://localhost:4200/");
+    cy.visit("/");
   });
 
   
