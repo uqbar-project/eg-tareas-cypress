@@ -10,22 +10,16 @@ describe("template spec", () => {
 
   before(() => {
     cy.request("PUT", URL_BASE_BACKEND + "/reset/tareas");
+
+    cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/usuarios" }).as("getUsuarios");
+
+    cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/tareas" }).as("getTareas");
+
+    cy.intercept({ method: "PUT", url: URL_BASE_BACKEND + "/tareas/*" }).as("updateTarea");
   });
 
   beforeEach(() => {
     cy.visit("http://localhost:4200/");
-
-    cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/usuarios" }).as(
-      "getUsuarios"
-    );
-
-    cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/tareas" }).as(
-      "getTareas"
-    );
-
-    cy.intercept({ method: "PUT", url: URL_BASE_BACKEND + "/tareas/*" }).as(
-      "updateTarea"
-    );
   });
 
   it("crea una tarea", () => {
