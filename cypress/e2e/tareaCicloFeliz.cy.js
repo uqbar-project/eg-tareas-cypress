@@ -39,33 +39,42 @@ describe("template spec", () => {
 
     cy.findByTestId("asignatario").select(miTarea.asignatario);
 
-    cy.get('input[placeholder="Fecha de inicio de la tarea"]').click();
+    cy.get('input[placeholder="Fecha de inicio de la tarea"]').as("selectorFecha");
+    cy.get("@selectorFecha").click();
 
     cy.get(".dp-calendar-wrapper").get(".dp-calendar-day").first().click();
 
-    // cy.pause()
+    cy.get("@selectorFecha")
+      .invoke("val")
+      .then((fechaIngresada) => {
+        // cy.pause()
 
-    cy.contains("Guardar").click();
+        cy.contains("Guardar").click();
 
-    cy.wait("@getTareas");
+        cy.wait("@getTareas");
 
-    cy.get('[data-testid="fila-tarea"]').last().as("tareaCreada");
+        cy.get('[data-testid="fila-tarea"]').last().as("tareaCreada");
 
-    cy.get("@tareaCreada")
-      .findDescripcion()
-      .should("contain.text", miTarea.descripcion);
+        cy.get("@tareaCreada")
+          .findDescripcion()
+          .should("contain.text", miTarea.descripcion);
 
-    cy.get("@tareaCreada")
-      .findIteracion()
-      .should("contains.text", miTarea.iteracion);
+        cy.get("@tareaCreada")
+          .findIteracion()
+          .should("contains.text", miTarea.iteracion);
 
-    cy.get("@tareaCreada")
-      .findAsignatario()
-      .should("contains.text", miTarea.asignatario);
+        cy.get("@tareaCreada")
+          .findAsignatario()
+          .should("contains.text", miTarea.asignatario);
 
-    cy.get("@tareaCreada").findCumplirButton().should("exist");
-    cy.get("@tareaCreada").findAsignarButton().should("exist");
-    cy.get("@tareaCreada").findDesasignarButton().should("exist");
+        cy.get("@tareaCreada")
+          .findFecha()
+          .should("contains.text", fechaIngresada);
+
+        cy.get("@tareaCreada").findCumplirButton().should("exist");
+        cy.get("@tareaCreada").findAsignarButton().should("exist");
+        cy.get("@tareaCreada").findDesasignarButton().should("exist");
+      });
   });
 
   it("desasigna la tarea sin inconvenientes", () => {
@@ -85,8 +94,7 @@ describe("template spec", () => {
   });
 
   it("asigna a alguien nuevo", () => {
-
-    const nuevoAsignatario = "Jorge Luis Lescano"
+    const nuevoAsignatario = "Jorge Luis Lescano";
 
     cy.get('[data-testid="fila-tarea"]')
       .filter(`:contains(${miTarea.descripcion})`)
@@ -102,13 +110,14 @@ describe("template spec", () => {
 
     cy.wait("@getTareas");
 
-    cy.get("@tareaCreada").findAsignatario().should("contains.text", nuevoAsignatario);
+    cy.get("@tareaCreada")
+      .findAsignatario()
+      .should("contains.text", nuevoAsignatario);
 
     cy.get("@tareaCreada").findDesasignarButton().should("exist");
   });
 
   it("completar la tarea, no poder reasignarla o volverla a completar", () => {
-
     cy.get('[data-testid="fila-tarea"]')
       .filter(`:contains(${miTarea.descripcion})`)
       .as("tareaCreada");
