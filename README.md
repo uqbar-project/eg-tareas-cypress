@@ -92,7 +92,7 @@ Al ejecutar por primera vez, se generaran una serie de carpetas y archivos. Algu
 * **cypress/support:** Aquí podemos crear comandos personalizados en el archivo **"commands.js"**, o aplicar configuraciones globales (tales como importar esos comandos que creamos) para todos nuestros tests, mediante el archivo **"e2e.js"**.
 
 ## Buenisimo ¿Y cómo escribo un test?
-os tests de cypress se escriben en javascript. Para aclararle al editor que estemos usando que nos autocomplete con sugerencias de cypress tenemos que agregar
+Los tests de cypress se escriben en javascript. Para aclararle al editor que estemos usando que nos autocomplete con sugerencias de cypress tenemos que agregar
 
 ```js
 /// <reference types="cypress" />
@@ -103,13 +103,8 @@ al principio del archivo.
 
 ### Ej 2: Tests contra nuestro ejemplo de "Tareas de Desarrollo"
 
-Para recordar, utilizabamos:
+Para recordar, utilizamos:
 
 * Angular en el [frontend](https://github.com/uqbar-project/eg-tareas-angular), levantado en el puerto 4200 de localhost.
 * Spring Boot en el [backend](https://github.com/uqbar-project/eg-tareas-springboot-kotlin)), levantado en el puerto 9000 de localhost.
 
-[TODO]
-
-## Ver más
-
-* [**Ejemplo anterior de Cypress, hecho en 2021:**](https://github.com/uqbar-project/eg-cypress-tareas-2021) La mayoría de la teoría aplica, pero la sintaxis cambió y mejoró un poco en 3-4 años hasta llegar a la versión actual.
