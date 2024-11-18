@@ -1,127 +1,124 @@
 /// <reference types="cypress" />
+import { format } from 'date-fns'
 
-describe("template spec", () => {
-  const URL_BASE_BACKEND = "http://localhost:9000";
+describe('template spec', () => {
+  const URL_BASE_BACKEND = 'http://localhost:9000'
   const miTarea = {
-    descripcion: "Algo3: Preparar la clase de E2E Testing",
-    iteracion: "Cursada 2023",
-    asignatario: "Juan Contardo",
-  };
+    descripcion: 'Algo3: Preparar la clase de E2E Testing',
+    iteracion: 'Cursada 2023',
+    asignatario: 'Juan Contardo',
+    fechaIngresada: new Date('2024-10-10'),
+  }
 
   before(() => {
-    cy.request("PUT", URL_BASE_BACKEND + "/reset/tareas");
-
-    cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/usuarios" }).as("getUsuarios");
-
-    cy.intercept({ method: "GET", url: URL_BASE_BACKEND + "/tareas" }).as("getTareas");
-
-    cy.intercept({ method: "PUT", url: URL_BASE_BACKEND + "/tareas/*" }).as("updateTarea");
-  });
+    cy.request('PUT', URL_BASE_BACKEND + '/reset/tareas')
+  })
 
   beforeEach(() => {
-    cy.visit("/");
-  });
+    // hay que tener cuidado con agregar interceptores en el hook before
 
-  it("crea una tarea", () => {
-    cy.get("[data-testid='nueva-tarea']").click();
+    cy.intercept({ method: 'GET', url: URL_BASE_BACKEND + '/usuarios' }).as('getUsuarios')
 
-    cy.wait("@getUsuarios");
+    cy.intercept({ method: 'GET', url: URL_BASE_BACKEND + '/tareas' }).as('getTareas')
 
-    cy.get('[data-testid="descripcion"').type(miTarea.descripcion);
+    cy.intercept({ method: 'PUT', url: URL_BASE_BACKEND + '/tareas/*' }).as('updateTarea')
 
-    cy.get('[data-testid="iteracion"').type(miTarea.iteracion);
+    cy.visit('/')
+  })
 
-    cy.findByTestId("asignatario").select(miTarea.asignatario);
+  it('crea una tarea', () => {
+    cy.get('[data-testid=\'nueva-tarea\']').click()
 
-    cy.get('input[placeholder="Fecha de inicio de la tarea"]').as("selectorFecha");
-    cy.get("@selectorFecha").click();
+    cy.wait('@getUsuarios')
 
-    cy.get(".dp-calendar-wrapper").get(".dp-calendar-day").first().click();
+    cy.get('[data-testid="descripcion"').type(miTarea.descripcion)
 
-    cy.get("@selectorFecha")
-      .invoke("val")
-      .then((fechaIngresada) => {
-        // cy.pause()
+    cy.get('[data-testid="iteracion"').type(miTarea.iteracion)
 
-        cy.contains("Guardar").click();
+    cy.findByTestId('asignatario').select(miTarea.asignatario)
 
-        cy.wait("@getTareas");
+    cy.get('input[placeholder="Fecha de inicio de la tarea"]').type(format(miTarea.fechaIngresada, 'yyyy-MM-dd'))
 
-        cy.get('[data-testid="fila-tarea"]').last().as("tareaCreada");
+    cy.contains('Guardar').click()
 
-        cy.get("@tareaCreada")
-          .findDescripcion()
-          .should("contain.text", miTarea.descripcion);
+    cy.wait('@getTareas')
 
-        cy.get("@tareaCreada")
-          .findIteracion()
-          .should("contains.text", miTarea.iteracion);
+    // cy.pause()
 
-        cy.get("@tareaCreada")
-          .findAsignatario()
-          .should("contains.text", miTarea.asignatario);
+    cy.get('[data-testid="fila-tarea"]').last().as('tareaCreada')
 
-        cy.get("@tareaCreada")
-          .findFecha()
-          .should("contains.text", fechaIngresada);
+    cy.get('@tareaCreada')
+      .findDescripcion()
+      .should('contain.text', miTarea.descripcion)
 
-        cy.get("@tareaCreada").findCumplirButton().should("exist");
-        cy.get("@tareaCreada").findAsignarButton().should("exist");
-        cy.get("@tareaCreada").findDesasignarButton().should("exist");
-      });
-  });
+    cy.get('@tareaCreada')
+      .findIteracion()
+      .should('contains.text', miTarea.iteracion)
 
-  it("desasigna la tarea sin inconvenientes", () => {
-    cy.get('[data-testid="fila-tarea"]')
-      .filter(`:contains(${miTarea.descripcion})`)
-      .as("tareaCreada");
-
-    cy.get("@tareaCreada")
+    cy.get('@tareaCreada')
       .findAsignatario()
-      .should("contains.text", miTarea.asignatario);
+      .should('contains.text', miTarea.asignatario)
 
-    cy.get("@tareaCreada").findDesasignarButton().click();
+    cy.get('@tareaCreada')
+      .findFecha()
+      .should('contains.text', format(miTarea.fechaIngresada, 'dd/MM/yyyy'))
 
-    cy.get("@tareaCreada").findAsignatario().should("be.empty");
+    cy.get('@tareaCreada').findCumplirButton().should('exist')
+    cy.get('@tareaCreada').findAsignarButton().should('exist')
+    cy.get('@tareaCreada').findDesasignarButton().should('exist')
+  })
 
-    cy.get("@tareaCreada").findDesasignarButton().should("not.exist");
-  });
-
-  it("asigna a alguien nuevo", () => {
-    const nuevoAsignatario = "Jorge Luis Lescano";
-
+  it('desasigna la tarea sin inconvenientes', () => {
     cy.get('[data-testid="fila-tarea"]')
       .filter(`:contains(${miTarea.descripcion})`)
-      .as("tareaCreada");
+      .as('tareaCreada')
 
-    cy.get("@tareaCreada").findAsignarButton().click();
-
-    cy.wait("@getUsuarios");
-
-    cy.findByTestId("asignatario").select(nuevoAsignatario);
-
-    cy.contains("Guardar").click();
-
-    cy.wait("@getTareas");
-
-    cy.get("@tareaCreada")
+    cy.get('@tareaCreada')
       .findAsignatario()
-      .should("contains.text", nuevoAsignatario);
+      .should('contains.text', miTarea.asignatario)
 
-    cy.get("@tareaCreada").findDesasignarButton().should("exist");
-  });
+    cy.get('@tareaCreada').findDesasignarButton().click()
 
-  it("completar la tarea, no poder reasignarla o volverla a completar", () => {
+    cy.get('@tareaCreada').findAsignatario().should('be.empty')
+
+    cy.get('@tareaCreada').findDesasignarButton().should('not.exist')
+  })
+
+  it('asigna a alguien nuevo', () => {
+    const nuevoAsignatario = 'Jorge Luis Lescano'
+
     cy.get('[data-testid="fila-tarea"]')
       .filter(`:contains(${miTarea.descripcion})`)
-      .as("tareaCreada");
+      .as('tareaCreada')
 
-    cy.get("@tareaCreada").findCumplirButton().click();
+    cy.get('@tareaCreada').findAsignarButton().click()
 
-    cy.wait("@updateTarea");
+    cy.wait('@getUsuarios')
 
-    cy.get("@tareaCreada").findDesasignarButton().should("not.exist");
-    cy.get("@tareaCreada").findAsignarButton().should("not.exist");
-    cy.get("@tareaCreada").findDesasignarButton().should("not.exist");
-  });
-});
+    cy.findByTestId('asignatario').select(nuevoAsignatario)
+
+    cy.contains('Guardar').click()
+
+    cy.wait('@getTareas')
+
+    cy.get('@tareaCreada')
+      .findAsignatario()
+      .should('contains.text', nuevoAsignatario)
+
+    cy.get('@tareaCreada').findDesasignarButton().should('exist')
+  })
+
+  it('completar la tarea, no poder reasignarla o volverla a completar', () => {
+    cy.get('[data-testid="fila-tarea"]')
+      .filter(`:contains(${miTarea.descripcion})`)
+      .as('tareaCreada')
+
+    cy.get('@tareaCreada').findCumplirButton().click()
+
+    cy.wait('@updateTarea')
+
+    cy.get('@tareaCreada').findDesasignarButton().should('not.exist')
+    cy.get('@tareaCreada').findAsignarButton().should('not.exist')
+    cy.get('@tareaCreada').findDesasignarButton().should('not.exist')
+  })
+})
