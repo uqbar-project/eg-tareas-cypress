@@ -18,6 +18,6 @@ jobs:
           # por el momento no funciona
       - name: build
       - run: |
-        npm install
-        npm run e2e
+          npm install
+          npm run e2e
         
