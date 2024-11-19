@@ -6,7 +6,7 @@
     "stop:frontend": "./scripts/stop-frontend.sh",
     "stop:all": "npm run stop:frontend && npm run stop:backend",
     "cy:run": "cypress run --browser chrome --spec ./cypress/e2e/2-tareaCicloFeliz.cy.js",
-    "e2e": "npm run start:backend && start-server-and-test start:frontend http://localhost:4200 cy:run"
+    "e2e": "npm run start:backend && npm run start:frontend && wait-on http://localhost:4200 && npm run cy:run"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -17,6 +17,7 @@
     "eslint": "^9.15.0",
     "eslint-plugin-cypress": "^4.1.0",
     "globals": "^15.12.0",
-    "start-server-and-test": "^2.0.8"
+    "start-server-and-test": "^2.0.8",
+    "wait-on": "^8.0.1"
   }
 }
