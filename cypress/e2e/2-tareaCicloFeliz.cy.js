@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 import { format } from 'date-fns'
 
-describe('template spec', () => {
+describe('tareas spec', () => {
   const URL_BASE_BACKEND = 'http://localhost:9000'
   const miTarea = {
     descripcion: 'Algo3: Preparar la clase de E2E Testing',

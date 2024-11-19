@@ -1,0 +1,1 @@
+kill -9 $(ps aux | grep eg-tareas-angular | awk 'NR==1{print $2}')
