@@ -4,4 +4,4 @@ fi
 cd eg-tareas-angular
 git pull
 npm install
-nohup npm start > output-frontend.log 2>&1 &
+nohup angular-http-server --silent --path . -p 4200 > output-frontend.log 2>&1 &

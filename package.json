@@ -6,17 +6,17 @@
     "stop:frontend": "./scripts/stop-frontend.sh",
     "stop:all": "npm run stop:frontend && npm run stop:backend",
     "cy:run": "cypress run --browser chrome --spec ./cypress/e2e/2-tareaCicloFeliz.cy.js",
-    "e2e": "npm run start:backend && start-server-and-test start:frontend http://localhost:4200 cy:run && npm run stop:all"
+    "e2e": "npm run start:backend && start-server-and-test start:frontend 4200 cy:run && npm run stop:backend"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@testing-library/cypress": "^10.0.1",
+    "angular-http-server": "^1.12.0",
     "cypress": "^13.6.0",
     "date-fns": "^4.1.0",
     "eslint": "^9.15.0",
     "eslint-plugin-cypress": "^4.1.0",
     "globals": "^15.12.0",
-    "shx": "^0.3.4",
     "start-server-and-test": "^2.0.8"
   }
 }
