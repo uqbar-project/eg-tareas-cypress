@@ -13,6 +13,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npm run e2e
-          # start: npm run e2e
+          # build: npm run e2e
+          start: npm run e2e
           # por el momento no funciona
