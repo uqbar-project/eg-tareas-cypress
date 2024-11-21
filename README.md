@@ -60,7 +60,7 @@ Es _framework-agnostic_, lo que significa que no depende de un framework o lengu
   - Ejemplo 2: 
     - Hago cy.visit() a mi frontend en React
     - Hago acciones que tienen efecto en el backend
-    - En el mismo test quiero hacer `**cy.visit()**` a mi frontend en Angular, para ver que los cambios se reflejen allá.
+    - En el mismo test quiero hacer `cy.visit()` a mi frontend en Angular, para ver que los cambios se reflejen allá.
     - Ese comando `visit()` falla, Cypress no va a permitir que se realice.
 
 ## ¿Como empiezo?
@@ -79,13 +79,13 @@ npx cypress open
 
 Al ejecutar por primera vez, se generaran una serie de carpetas y archivos. Algunos de los más importantes para nosotros serán:
 
-* `**cypress.config.json**`: El archivo principal de configuración.
+* `cypress.config.json`: El archivo principal de configuración.
   * Aquí podremos hacer cosas como setear la propiedad "baseUrl", para no tener que repetir en todo nuestro codigo la ruta principal de nuestro servidor frontend.
   * También podemos, de ser necesario, activar algunas funcionalidades para saltarnos validación de CORS. Pero en principio no debería ser necesario.
   * [Más info sobre la configuración del framework aquí.](https://docs.cypress.io/guides/references/configuration#__docusaurus_skipToContent_fallback)
-* `**cypress/e2e:**` Aquí almacenaremos nuestros tests.
-* `**cypress/fixtures:**` Aquí podemos guardar archivos json/yml/xml para simular respuestas del backend, en caso que querramos hacer un test con comportamiento mas predecible (similar a los spy/mock/stubs que usamos en el front).
-* `**cypress/support:**` Aquí podemos crear comandos personalizados en el archivo `**commands.js**`, o aplicar configuraciones globales (tales como importar esos comandos que creamos) para todos nuestros tests, mediante el archivo `**e2e.js**`.
+* `cypress/e2e:` Aquí almacenaremos nuestros tests.
+* `cypress/fixtures:` Aquí podemos guardar archivos json/yml/xml para simular respuestas del backend, en caso que querramos hacer un test con comportamiento mas predecible (similar a los spy/mock/stubs que usamos en el front).
+* `cypress/support:` Aquí podemos crear comandos personalizados en el archivo `commands.js`, o aplicar configuraciones globales (tales como importar esos comandos que creamos) para todos nuestros tests, mediante el archivo `e2e.js`.
 
 ## Buenisimo, ¿cómo escribo un test?
 
@@ -102,7 +102,7 @@ En el archivo [`0-testBasico.cy.js`](./cypress/e2e/0-testBasico.cy.js) tenemos n
 
 - utilizamos una app de ejemplo de Cypress (TODO List), que está publicada en Internet
 - no tenemos demasiado control, eso nos puede causar ciertas incomodidades (como tener que usar `data-test` en lugar de `data-testid` o tener que encontrar el link `Active` para filtrar los elementos activos)
-- pero por otra parte a veces es útil hacer **tests de contrato**[https://medium.com/contract-testing/introduction-to-contract-testing-a02156fb1279], sobre todo cuando tengo APIs o aplicaciones de terceras partes que nosotros consumimos. 
+- pero por otra parte a veces es útil hacer [**tests de contrato**](https://medium.com/contract-testing/introduction-to-contract-testing-a02156fb1279), sobre todo cuando tengo APIs o aplicaciones de terceras partes que nosotros consumimos. 
 
 ### Ej 2: Tests contra nuestro ejemplo de "Tareas de Desarrollo"
 
