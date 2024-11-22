@@ -1,0 +1,1 @@
+find eg-tareas-angular/src -name '*.ts' -exec sed -i 's/localhost/host.docker.internal/g' {} +
