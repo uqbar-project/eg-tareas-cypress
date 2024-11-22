@@ -2,7 +2,7 @@
 import { format } from 'date-fns'
 
 describe('tareas spec', () => {
-  const URL_BASE_BACKEND = 'http://localhost:9000'
+  const URL_BASE_BACKEND = 'http://127.0.0.1:9000'
   const miTarea = {
     descripcion: 'Algo3: Preparar la clase de E2E Testing',
     iteracion: 'Cursada 2023',
