@@ -9,7 +9,7 @@ if [ ! -d eg-tareas-angular ] ; then
 fi
 cd eg-tareas-angular
 git pull
-# npm install
+npm install
 
 if ![ -z ${CI} ] ; then
   find ../cypress/e2e -name '*.ts' -exec sed -i 's/localhost/host.docker.internal/g' {} +
